@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState,useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { AxiosProvider, Request, Get, Delete, Head, Post, Put, Patch, withAxios } from 'react-axios';
 import axios from "axios";
 
 function Recherche() {
@@ -9,28 +8,34 @@ function Recherche() {
 	// const [date, setDate] = useState(new Date().toISOString().substring(0, 10));
 	const [data, setData] = useState(null);
 
-	const handleDateChange = (e) => {
-		setDate(formatDate(e));
-		console.log(data);
+	useEffect(() => {
 		fetchData();
+	}, []); // Runs when dependency1 or dependency2 changes
+
+	const handleDateChange = (e) => {
+		console.log("e");
+		console.log(formatDate(e));
+		setDate();
 		if (data != null) {
 			const result = data.filter((item) => {
-				console.log(item.date);
-				item.date === date;
+				item.date === formatDate(e);
 			});
 			console.log("date");
-			console.log(date);
 			console.log(result);
 		}
 		// setData(...dataList);
 	}
 
-	const formatDate = (dateobj) => {
-		const formattedDate = `${dateobj.getFullYear()}-${String(dateobj.getMonth() + 1).padStart(2, '0')}-${String(dateobj.getDate()).padStart(2, '0')}`;
-		return formattedDate;
+	const formatDate = (date) => {
+		// Extract the year, month, and day
+		const year = date.getFullYear();
+		const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+		const day = date.getDate().toString().padStart(2, '0');
+		// Return the formatted date string
+		return `${year}-${month}-${day}`;
 	}
 
-	const fetchData = async (date) => {
+	const fetchData = async () => {
 		try {
 			const response = await axios.get('../../data/data.json');
 			setData(response.data);
