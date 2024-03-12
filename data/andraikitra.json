@@ -1,32 +1,28 @@
-{
-    "3": [
+ [
         {
-            "andraikitra": "Preside alarobia",
+            "andraikitra": "Preside",
             "id": "1"
         },
         {
-            "andraikitra": "FF alarobia",
+            "andraikitra": "FF ",
             "id": "2"
-        }
-    ],
-    "5": [
+        },
+
         {
             "id": "3",
-            "andraikitra": "Preside zoma"
+            "andraikitra": "Preside"
         },
         {
             "id": "4",
-            "andraikitra": "Fampaherezana zoma"
-        }
-    ],
-    "6": [
+            "andraikitra": "Fampaherezana"
+        },
         {
             "id": "5",
-            "andraikitra": "Preside sabata"
+            "andraikitra": "Preside"
         },
         {
             "id": "6",
-            "andraikitra": "Velomin teniny sabata"
+            "andraikitra": "Velomin teniny"
         },
         {
             "id": "7",
@@ -34,7 +30,7 @@
         },
         {
             "id": "9",
-            "andraikitra": "5 minitra sabata"
+            "andraikitra": "5 minitra"
         },
         {
             "id": "10",
@@ -50,11 +46,10 @@
         },
         {
             "id": "12",
-            "andraikitra": "Preside sabata hariva"
+            "andraikitra": "Preside"
         },
         {
             "id": "13",
-            "andraikitra": "Fampaherezana sabata hariva"
+            "andraikitra": "Fampaherezana "
         }
     ]
-}

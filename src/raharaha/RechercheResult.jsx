@@ -1,9 +1,15 @@
 
-function RechercheResult({ dayName, data }) {
+function RechercheResult({ dayName, data , andraikitra}) {
 
 
-    console.log(dayName);
+    console.log("andraikitra");
+    console.log(andraikitra);
     const hrAfter = ['7', '10', '15'];
+    
+    const  capitalizeEachWord = (str) => {
+        return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    }
+
     const todisplay = data.map((item, i) => {
         let hrText = '';
         let bgc = '';
@@ -24,11 +30,14 @@ function RechercheResult({ dayName, data }) {
                 hrText = 'Default text';
                 bgc = '#936c6c';
         }
+        let andr = andraikitra.find(andr => andr.id === item.idRaharaha);
+        andr = andr.andraikitra;
+        let pre = capitalizeEachWord(item.prenom);
         return (
             <>
                 <tr key={i}>
-                    <td>{item.andraikitra}</td>
-                    <td>{item.prenom}</td>
+                    <td>{ andr}</td>
+                    <td>{ pre }</td>
 
                 </tr>
                 {
@@ -37,7 +46,7 @@ function RechercheResult({ dayName, data }) {
                 }
             </>
         )
-    })
+    });
 
     return (
         <>
@@ -53,7 +62,7 @@ function RechercheResult({ dayName, data }) {
                     <tbody>
                         {dayName == 'Sabata' && <>
 
-                            <tr style={{ backgroundColor: 'gray' }}> <td colSpan={2} > Sabata maraina 8H-8H30  </td></tr>
+                            <tr style={{ backgroundColor: 'gray' }}> <td colSpan={2} style={{ color: 'white' }} > Sabata maraina 8H-8H30  </td></tr>
 
                         </>
                         }

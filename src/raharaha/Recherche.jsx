@@ -9,9 +9,11 @@ function Recherche() {
 	// const [date, setDate] = useState(new Date().toISOString().substring(0, 10));
 	const [data, setData] = useState(null);
 	const [filteredData, setFilteredData] = useState([]);
+	const [andraikitra, setAndraikitra] = useState([]);
 
 	useEffect(() => {
 		fetchData();
+		fetchAndraikitra();
 	}, []); // Runs when dependency1 or dependency2 changes
 
 	const handleDateChange = (e) => {
@@ -60,6 +62,15 @@ function Recherche() {
 		}
 	};
 
+	const fetchAndraikitra = async () => {
+		try {
+			const response = await axios.get('../../data/andraikitra.json');
+			setAndraikitra(response.data);
+		} catch (error) {
+			console.error('Error fetching data: ', error);
+		}
+	};
+
 	// Function to sort objects based on the order of idRaharaha in the reference array
 	const sortObjectsByRaharahaOrder = (objects) => {
 		const idRaharahaOrder = ["5", "6", "7", "9", "10", "14", "15", "12"];
@@ -80,9 +91,11 @@ function Recherche() {
 						<h5>Mpitondra raharaha</h5>
 						<h6>  {date[1]} -  {date[0]}</h6>
 					</div >
-					<RechercheResult dayName={date[1]} data={filteredData} ></RechercheResult>
+					<RechercheResult dayName={date[1]} data={filteredData} andraikitra={andraikitra} ></RechercheResult>
 				</>
 			)}
+
+			{filteredData && filteredData.length == 0 && ( <div className="text-center pt-3"> <p>	Pas de données </p> </div>)}
 		</>
 	)
 }
