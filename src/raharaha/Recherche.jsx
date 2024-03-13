@@ -79,15 +79,20 @@ function Recherche() {
 		});
 	}
 
+	const isAllowedDay = (date) => {
+		const day = date.getDay();
+		return day === 3 || day === 5 || day === 6; 
+	}
+
 	return (
 		<>
 			<div className="card p-2" >
 				<h5>Date de recherche</h5>
-				<DatePicker className="form-control" onChange={handleDateChange} />
+				<DatePicker filterDate={isAllowedDay} className="form-control" onChange={handleDateChange} />
 			</div>
 			{filteredData && filteredData.length > 0 && (
 				<>
-					< div className="p-5 text-center">
+					< div className="p-3 text-center">
 						<h5>Mpitondra raharaha</h5>
 						<h6>  {date[1]} -  {date[0]}</h6>
 					</div >
