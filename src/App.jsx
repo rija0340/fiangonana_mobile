@@ -3,6 +3,7 @@ import MainLayout from "./MainLayout";
 import Recherche from "./raharaha/Recherche";
 import Home from "./Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Saisie from "./raharaha/Saisie";
 function App() {
   return (
     <BrowserRouter>
@@ -11,6 +12,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/raharaha/" element={<Index />} />
           <Route path="/raharaha/recherche" element={<Recherche />} />
+          <Route path="/raharaha/saisie" element={<Saisie />} />
           {/* <Route path="raharaha/recherche" element={<About />} />
           <Route path="raharaha/saisie" element={<Contact />} /> */}
         </Routes>

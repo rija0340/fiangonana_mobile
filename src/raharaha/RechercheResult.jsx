@@ -51,7 +51,7 @@ function RechercheResult({ dayName, data , andraikitra}) {
     return (
         <>
             {data && data.length > 0 &&
-
+    
                 <table className="table table-bordered">
                     <thead>
                         <tr>

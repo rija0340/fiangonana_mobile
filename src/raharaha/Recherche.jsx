@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import RechercheResult from "./RechercheResult";
+import DatepickerRestricted from "../utils/DatepickerRestricted";
+import { formatDateFr,formatDate } from "../utils/dateHelper";
+
 
 function Recherche() {
 	const [date, setDate] = useState([]);
@@ -31,28 +33,6 @@ function Recherche() {
 		}
 	}
 
-	const formatDate = (date) => {
-		// Extract the year, month, and day
-		const year = date.getFullYear();
-		const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
-		const day = date.getDate().toString().padStart(2, '0');
-		// Return the formatted date string
-		return `${year}-${month}-${day}`;
-	}
-
-	const formatDateFr = (date) => {
-		// Extract the year, month, and day
-		const year = date.getFullYear();
-		const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
-		const day = date.getDate().toString().padStart(2, '0');
-
-		// Get the day name
-		const days = ["Alahady", "Alatsinainy", "Talata", "Alarobia", "Alakamisy", "Zoma", "Sabata"];
-		const dayName = days[date.getDay()];
-		// Return the formatted date string
-		return [`${day}/${month}/${year}`, dayName];
-	}
-
 	const fetchData = async () => {
 		try {
 			const response = await axios.get('../../data/data.json');
@@ -79,24 +59,22 @@ function Recherche() {
 		});
 	}
 
-	const isAllowedDay = (date) => {
-		const day = date.getDay();
-		return day === 3 || day === 5 || day === 6; 
-	}
-
 	return (
 		<>
-			<div className="card p-2" >
+			<div className="card p-2 mb-2" >
 				<h5>Date de recherche</h5>
-				<DatePicker filterDate={isAllowedDay} className="form-control" onChange={handleDateChange} />
+				<DatepickerRestricted handleDateChange={handleDateChange} />
 			</div>
 			{filteredData && filteredData.length > 0 && (
 				<>
+				<div className="card p-2">
+
 					< div className="p-3 text-center">
 						<h5>Mpitondra raharaha</h5>
 						<h6>  {date[1]} -  {date[0]}</h6>
 					</div >
 					<RechercheResult dayName={date[1]} data={filteredData} andraikitra={andraikitra} ></RechercheResult>
+				</div>
 				</>
 			)}
 
