@@ -18,7 +18,7 @@ function Saisie() {
 			<DatepickerRestricted handleDateChange={handleDateChange}></DatepickerRestricted>
 			</div>
 			<div>
-				<Form dayName={selectedDate[1]} ></Form>
+				<Form dateArray={selectedDate} ></Form>
 			</div>
 		</>
 	)
