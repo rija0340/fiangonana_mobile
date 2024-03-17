@@ -3,7 +3,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import RechercheResult from "./RechercheResult";
 import DatepickerRestricted from "../utils/DatepickerRestricted";
-import { formatDateFr,formatDate } from "../utils/dateHelper";
+import { formatDateFr, formatDate } from "../utils/dateHelper";
 
 
 function Recherche() {
@@ -35,16 +35,28 @@ function Recherche() {
 
 	const fetchData = async () => {
 		try {
-			const response = await axios.get('../../data/data.json');
+			const response = await axios.get('http://localhost/backend_fiangonana_mobile/traitement.php', {
+				params: {
+					type: 'data'
+				}
+			}
+			);
 			setData(response.data);
+			console.log("response.data");
+			console.log(response.data);
 		} catch (error) {
+
 			console.error('Error fetching data: ', error);
 		}
 	};
 
 	const fetchAndraikitra = async () => {
 		try {
-			const response = await axios.get('../../data/andraikitra.json');
+			const response = await axios.get('http://localhost/backend_fiangonana_mobile/traitement.php', {
+				params: {
+					type: 'andraikitra'
+				}
+			});
 			setAndraikitra(response.data);
 		} catch (error) {
 			console.error('Error fetching data: ', error);
@@ -67,18 +79,18 @@ function Recherche() {
 			</div>
 			{filteredData && filteredData.length > 0 && (
 				<>
-				<div className="card p-2">
+					<div className="card p-2">
 
-					< div className="p-3 text-center">
-						<h5>Mpitondra raharaha</h5>
-						<h6>  {date[1]} -  {date[0]}</h6>
-					</div >
-					<RechercheResult dayName={date[1]} data={filteredData} andraikitra={andraikitra} ></RechercheResult>
-				</div>
+						< div className="p-3 text-center">
+							<h5>Mpitondra raharaha</h5>
+							<h6>  {date[1]} -  {date[0]}</h6>
+						</div >
+						<RechercheResult dayName={date[1]} data={filteredData} andraikitra={andraikitra} ></RechercheResult>
+					</div>
 				</>
 			)}
 
-			{filteredData && filteredData.length == 0 && ( <div className="text-center pt-3"> <p>	Pas de données </p> </div>)}
+			{filteredData && filteredData.length == 0 && (<div className="text-center pt-3"> <p>	Pas de données </p> </div>)}
 		</>
 	)
 }

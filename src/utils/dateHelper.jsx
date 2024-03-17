@@ -12,6 +12,10 @@ export const formatDateFr = (date) => {
 }
 
 export const formatDate = (date) => {
+
+    if (typeof date !== 'object') {
+        date = new Date(date);
+    }
     // Extract the year, month, and day
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based

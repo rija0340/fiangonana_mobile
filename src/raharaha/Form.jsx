@@ -1,46 +1,56 @@
-import andraikitraParDate from "./../../data/andraikitraParDate.json";
 import andraikitra from "./../../data/andraikitra.json";
 import SelectC from "./SelectC";
+import { split } from "postcss/lib/list";
+import { formatDate } from "../utils/dateHelper";
 
-function Form({ dateArray }) {
+function Form({ andraikitraToForm, getSubmittedData, dateArray }) {
 
-
-  const handleSelectChange = (e) =>{
-    console.log(e);
+  const handleSelectChange = (e) => {
   }
 
-  const keysArray = Object.keys(andraikitraParDate);
+
   let formInputs = "";
   const dayName = dateArray[1];
   const date = dateArray[0];
-  //checker si alarobia zoma ou sabata
-  if (keysArray.includes(dayName)) {
-    const andraikitraListe = andraikitraParDate[dayName];
 
-    formInputs = andraikitra.map((andr) => {
-      if (andraikitraListe.includes(parseInt(andr.id))) {
-        let name = date+"_"+andr.id;
-        return (
-          < >
-            <label htmlFor="">{andr.andraikitra}</label>
-            <SelectC handleSelectChange={handleSelectChange} name={name} key={andr.id}  andraikitra={andr.id}  ></SelectC>
-          </>
-        );
-      }
-      return null;
-    });
-  }
+  formInputs = andraikitra.map((andr) => {
+    //on retourne les andraikitra pour un jour et si data n'existe pas pour cette date
+    if (andraikitraToForm.includes(parseInt(andr.id))) {
+      let name = date + "_" + andr.id;
+      return (
+        < >
+          <label htmlFor="">{andr.andraikitra}</label>
+          <SelectC key={andr.id} handleSelectChange={handleSelectChange} name={name} andraikitra={andr.id}  ></SelectC>
+        </>
+      );
+    }
+    return null;
+  });
 
- 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData =   new FormData(e.target);
-    console.log(formData);
+    const formData = new FormData(e.target);
+    // Iterate over the entries
+
+    let andraikitraArray = [];
+    for (var pair of formData.entries()) {
+      let andraikitra = { date: "", andraikitraId: 0, membreId: 0 };
+
+      let [date, andraikitraId] = pair[0].split('_');
+      let membreId = pair[1];
+
+      andraikitra.date = formatDate(date);
+      andraikitra.andraikitraId = parseInt(andraikitraId);
+      andraikitra.membreId = parseInt(membreId);
+
+      andraikitraArray.push(andraikitra);
+    }
+    getSubmittedData(andraikitraArray);
   }
 
   return (
     <>
-      <p>ato anaty liste za zao</p>
       <form action="" onSubmit={handleSubmit}>
         {formInputs != "" && (
           <>

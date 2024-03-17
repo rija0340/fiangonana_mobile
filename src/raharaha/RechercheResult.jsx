@@ -1,12 +1,12 @@
 
-function RechercheResult({ dayName, data , andraikitra}) {
+function RechercheResult({ dayName, data, andraikitra }) {
 
 
     console.log("andraikitra");
     console.log(andraikitra);
     const hrAfter = ['7', '10', '15'];
-    
-    const  capitalizeEachWord = (str) => {
+
+    const capitalizeEachWord = (str) => {
         return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     }
 
@@ -36,13 +36,13 @@ function RechercheResult({ dayName, data , andraikitra}) {
         return (
             <>
                 <tr key={i}>
-                    <td>{ andr}</td>
-                    <td>{ pre }</td>
+                    <td>{andr}</td>
+                    <td>{pre}</td>
 
                 </tr>
                 {
                     hrAfter.includes(item.idRaharaha) &&
-                    <tr style={{ backgroundColor: bgc }} > <td colSpan={2} style={{ color: 'white' }} >{hrText}</td></tr>
+                    <tr key={i + "_text"} style={{ backgroundColor: bgc }} > <td colSpan={2} style={{ color: 'white' }} >{hrText}</td></tr>
                 }
             </>
         )
@@ -51,7 +51,7 @@ function RechercheResult({ dayName, data , andraikitra}) {
     return (
         <>
             {data && data.length > 0 &&
-    
+
                 <table className="table table-bordered">
                     <thead>
                         <tr>
