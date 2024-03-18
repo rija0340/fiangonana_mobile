@@ -7,6 +7,11 @@ function Form({ andraikitraToForm, getSubmittedData, dateArray }) {
 
   const handleSelectChange = (e) => {
   }
+  
+  console.log("andraikitraToForm");
+  console.log(andraikitraToForm);
+  console.log("dateArray");
+  console.log(dateArray);
 
 
   let formInputs = "";
