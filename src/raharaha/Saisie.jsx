@@ -22,20 +22,20 @@ function Saisie() {
 
 
 	const handleDateChange = (objectDate) => {
-		
+		setSelectedDate(formatDateFr(objectDate));
 		// checkExistingData(objectDate);
-		getRaharahaForm(formatDateFr(objectDate));
+		getRaharahaForm(objectDate);
 
 	}
 
 	const getRaharahaForm = (date) => {
 		// const keysArray = Object.keys(andraikitraParDate);
-		const dayName = date[1];
-		console.log(formatDate(date[0]));
+		const dayName = formatDateFr(date)[1];
+		console.log(formatDate(date));
 		const idRaharahaDayName = andraikitraParDate[dayName];
 		const existingData = mpitondraRaharaha.filter(raharaha => {
-			console.log(typeof raharaha.date +" -- "+ typeof formatDate(date[0]) );
-			return raharaha.date == formatDate(date[0]);
+			console.log(raharaha.date + " -- " + formatDate(date));
+			return raharaha.date === formatDate(date);
 		});
 		console.log("existingData");
 		console.log(existingData);
@@ -43,28 +43,18 @@ function Saisie() {
 			parseInt(item.idRaharaha)
 		)
 		//id de tous les raharha pour une date
-		
+
 		//retourner seulement andrakitra non existant pour la date
 		const idRaharahaToForm = [];
 		idRaharahaDayName.map(item => {
-			
+
 			if (!idExistingRaharaha.includes(parseInt(item))) {
 				idRaharahaToForm.push(item);
 			}
 		})
 		setAndraikitraToForm(idRaharahaToForm);
-		setSelectedDate(date);
+
 	}
-
-	// Check if all elements in the idExistingRaharaha array are present in the idRaharahaDayName array as idRaharaha
-
-	// const checkExistingData = (date) => {
-	// 	let searchDate = formatDate(date);
-	// 	const existingData = mpitondraRaharaha.filter(raharaha => {
-	// 		return raharaha.date === searchDate;
-	// 	});
-	// 	setExistingData(existingData);
-	// }
 
 	const toastSuccess = (message) => {
 		toast.success(message);
@@ -100,7 +90,13 @@ function Saisie() {
 				<h5> {selectedDate[1] + "-" + selectedDate[0]} </h5>
 			</div>
 			<div className="card p-2">
-				<Form getSubmittedData={getSubmittedData} andraikitraToForm={andraikitraToForm} dateArray={selectedDate} ></Form>
+				{andraikitraToForm.length > 0 ? (
+					<Form getSubmittedData={getSubmittedData} andraikitraToForm={andraikitraToForm} dateArray={selectedDate} />
+				) : (
+					<div className="text-center">
+						<p>Données existant</p>
+					</div>
+				)}
 			</div>
 		</>
 	)
