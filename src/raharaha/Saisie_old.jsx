@@ -10,10 +10,12 @@ import 'react-toastify/dist/ReactToastify.css';
 function Saisie() {
 
 	const [andraikitraParDate, setAndraikitraParDate] = useState([]);
+	const [selectedDate, setSelectedDate] = useState(formatDateFr(new Date()));
 	const [mpitondraRaharaha, setMpitondraRaharaha] = useState([]);
 	const [andraikitra, setAndraikitra] = useState([]);
-	const [arrayInputsData, setarrayInputsData] = useState([]);
-	const [selectedDate, setSelectedDate] = useState( formatDateFr(new Date()));
+	const [existingData, setExistingData] = useState([]);
+	const [andraikitraToForm, setAndraikitraToForm] = useState([]);
+	const [seletedDateObject, setSeletedDateObject] = useState(new Date());
 
 	useEffect(() => {
 		fetchData({ type: 'data' }, setMpitondraRaharaha);
@@ -21,49 +23,27 @@ function Saisie() {
 		fetchData({ type: 'andraikitra' }, setAndraikitra);
 	}, []); // Runs when dependency1 or dependency2 changes
 
-//data pour un input 
-const inputData = {
-		 		  name : "",
-		 		  type :"",
-				  value : "", //pour select
-		 		  label :"", //text select
-				  label2:"" //label pour input
-				}
 
 	const handleDateChange = (objectDate) => {
-
 		setSelectedDate(formatDateFr(objectDate));
-		//checker si des data existe pour la date 
-		let dateEN = formatDate(objectDate);
-
-		let existingData = mpitondraRaharaha.filter(mr => mr.date === dateEN);
-
-		let dayName  = formatDateFr(objectDate)[1];
-		let dateFR  = formatDateFr(objectDate)[0];
-		let andraikitraIdsByDayname = andraikitraParDate[dayName] ? andraikitraParDate[dayName] : [];
-
-		let inputsData = andraikitraIdsByDayname.map(andrId => {
-
-			let andrObj = getAndraikitraById(andrId);
-			let existingMRObj = getRaharahaByIdAndDate(existingData,andrId,dateEN);
-			let name = andrObj.id+"_"+dateFR;
-			let value = existingMRObj ? parseInt(existingMRObj.id)  : 0; //id de la personne
-			let type = "select";
-			let label = andrObj.andraikitra;
-
-			return { ...inputData,name:name,value:value,type:type,label:label,label2:label  }
-
-		} )
-		setarrayInputsData(inputsData);
+		setSeletedDateObject(objectDate);
+		// checkExistingData(objectDate);
+		getRaharahaForm(objectDate);
 
 	}
 
-	function getAndraikitraById(id){
-		return andraikitra.find(item => parseInt(item.id) === parseInt(id));
-	}
+	const getRaharahaForm = (date) => {
+		// const keysArray = Object.keys(andraikitraParDate);
+		const dayName = formatDateFr(date)[1];
+		console.log(formatDate(date));
+		const idRaharahaDayName = andraikitraParDate[dayName];
+		//on prend les données existant pour afficher dans le form 
+		const existingData = mpitondraRaharaha.filter(raharaha => {
+			return raharaha.date === formatDate(date);
+		});
 
-	function getRaharahaByIdAndDate(arrayOfObj,id,date){
-		return arrayOfObj.find(obj => parseInt(obj.idRaharaha) === parseInt(id) && obj.date === date ) 
+		setExistingData(existingData);
+		setAndraikitraToForm(idRaharahaDayName);
 	}
 
 	const toastSuccess = (message) => {
@@ -100,7 +80,13 @@ const inputData = {
 				<h5> {selectedDate[1] + "-" + selectedDate[0]} </h5>
 			</div>
 			<div className="card p-2">
-					<Form inputsData={inputData} ></Form>
+				{andraikitraToForm.length > 0 ? (
+					<Form andraikitraData={andraikitra} getSubmittedData={getSubmittedData}  existingData={existingData} andraikitraToForm={andraikitraToForm} dateArray={selectedDate} dateObject={seletedDateObject} />
+				) : (
+					<div className="text-center">
+						<p>Données existant</p>
+					</div>
+				)}
 			</div>
 		</>
 	)
