@@ -12,17 +12,21 @@ function Saisie() {
 	const [andraikitraParDate, setAndraikitraParDate] = useState([]);
 	const [selectedDate, setSelectedDate] = useState(formatDateFr(new Date()));
 	const [mpitondraRaharaha, setMpitondraRaharaha] = useState([]);
-	// const [existingData, setExistingData] = useState([]);
+	const [andraikitra, setAndraikitra] = useState([]);
+	const [existingData, setExistingData] = useState([]);
 	const [andraikitraToForm, setAndraikitraToForm] = useState([]);
+	const [seletedDateObject, setSeletedDateObject] = useState(new Date());
 
 	useEffect(() => {
 		fetchData({ type: 'data' }, setMpitondraRaharaha);
 		fetchData({ type: 'andraikitraParDate' }, setAndraikitraParDate);
+		fetchData({ type: 'andraikitra' }, setAndraikitra);
 	}, []); // Runs when dependency1 or dependency2 changes
 
 
 	const handleDateChange = (objectDate) => {
 		setSelectedDate(formatDateFr(objectDate));
+		setSeletedDateObject(objectDate);
 		// checkExistingData(objectDate);
 		getRaharahaForm(objectDate);
 
@@ -33,27 +37,13 @@ function Saisie() {
 		const dayName = formatDateFr(date)[1];
 		console.log(formatDate(date));
 		const idRaharahaDayName = andraikitraParDate[dayName];
+		//on prend les données existant pour afficher dans le form 
 		const existingData = mpitondraRaharaha.filter(raharaha => {
-			console.log(raharaha.date + " -- " + formatDate(date));
 			return raharaha.date === formatDate(date);
 		});
-		console.log("existingData");
-		console.log(existingData);
-		const idExistingRaharaha = existingData.map(item =>
-			parseInt(item.idRaharaha)
-		)
-		//id de tous les raharha pour une date
 
-		//retourner seulement andrakitra non existant pour la date
-		const idRaharahaToForm = [];
-		idRaharahaDayName.map(item => {
-
-			if (!idExistingRaharaha.includes(parseInt(item))) {
-				idRaharahaToForm.push(item);
-			}
-		})
-		setAndraikitraToForm(idRaharahaToForm);
-
+		setExistingData(existingData);
+		setAndraikitraToForm(idRaharahaDayName);
 	}
 
 	const toastSuccess = (message) => {
@@ -91,7 +81,7 @@ function Saisie() {
 			</div>
 			<div className="card p-2">
 				{andraikitraToForm.length > 0 ? (
-					<Form getSubmittedData={getSubmittedData} andraikitraToForm={andraikitraToForm} dateArray={selectedDate} />
+					<Form andraikitraData={andraikitra} getSubmittedData={getSubmittedData}  existingData={existingData} andraikitraToForm={andraikitraToForm} dateArray={selectedDate} dateObject={seletedDateObject} />
 				) : (
 					<div className="text-center">
 						<p>Données existant</p>
@@ -103,3 +93,41 @@ function Saisie() {
 }
 
 export default Saisie
+
+
+// [
+// 	const inputData =   {
+// 		  name 
+// 		  value
+// 		  type
+// 		  label
+// 	  }
+//   ]
+  
+//   saisie =>
+  
+//   saisie par jour
+//   saisie par semaine 
+  
+  
+//   - par jour 
+  
+//   en fonction date 
+  
+//   on cherche dans data si existing pour la date 
+//   on get andraikitra pour la Date
+  
+//   pour chaque andraikitra de la date donnée 
+//   on construit le inputData
+  
+  
+//   {
+  
+// 	  name  = concant date et andraikitra id
+// 	  value  = si existingData (mettre la valeur existatnte ) sinon ""
+// 	  type  = en fonction andraikitra (select, input , etc) à etudier 
+// 	  label = andraikitra name 
+//   }
+  
+  
+  

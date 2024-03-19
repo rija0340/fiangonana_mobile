@@ -1,37 +1,77 @@
 import andraikitra from "./../../data/andraikitra.json";
+import dataMpitondraRaharaha from "./../../data/data.json";
 import SelectC from "./SelectC";
 import { split } from "postcss/lib/list";
 import { formatDate } from "../utils/dateHelper";
 
-function Form({ andraikitraToForm, getSubmittedData, dateArray }) {
+function Form({ andraikitraData,andraikitraToForm, existingData ,getSubmittedData, dateArray,dateObject }) {
 
   const handleSelectChange = (e) => {
   }
-  
-  console.log("andraikitraToForm");
-  console.log(andraikitraToForm);
-  console.log("dateArray");
-  console.log(dateArray);
-
-
-  let formInputs = "";
   const dayName = dateArray[1];
   const date = dateArray[0];
 
-  formInputs = andraikitra.map((andr) => {
-    //on retourne les andraikitra pour un jour et si data n'existe pas pour cette date
-    if (andraikitraToForm.includes(parseInt(andr.id))) {
-      let name = date + "_" + andr.id;
+  //on loop tous les andraikitra
+  // formInputs = andraikitra.map((andr) => {
+  //   //on prend ceux qui correspondent à la date
+  //   if (andraikitraToForm.includes(parseInt(andr.id))) {
+  //     let name = date + "_" + andr.id;
+  //     return (
+  //       < >
+  //         <label htmlFor="">{andr.andraikitra}</label>
+  //         <SelectC key={andr.id} handleSelectChange={handleSelectChange} name={name} andraikitra={andr.id}  ></SelectC>
+  //       </>
+  //     );
+  //   }
+  //   return null;
+  // });
+
+  /**
+   * 
+   * @param {*} array array de recherche
+   * @param {*} objectKey string objectId : id de l'objet dans array
+   * @param {*} searchedKey key à rechercher dans array
+   * @returns object
+   */
+  const searchInArrayOfObject = (array,objectKey,searchedKey,type = "string") => {
+    if(type === 'integer'){
+      let foundObject = array.find(item => parseInt(item[objectKey])  === parseInt(searchedKey))
+      return foundObject;
+    }else{
+      let foundObject = array.find(item => item[objectKey]  === searchedKey)
+      return foundObject;
+    }
+  }
+
+
+  const formInputs = andraikitraToForm.map(andrId=>{
+    const andraikitraForDayName = searchInArrayOfObject(andraikitra,'id',andrId,"integer");
+    //checker s'il existe un data pour cette date et pour l'andraikitra 
+    let foundObject = null;
+    if(existingData.length > 0 ){
+      foundObject = existingData.find(item => parseInt(item.idRaharaha)  === parseInt(andraikitraForDayName.id) && item.date === formatDate(dateObject) )
+    }
+
+    if(foundObject !== null){
+      console.log("foundObject");
+      console.log(foundObject);
+     let nameSelect = foundObject.date + "_" + foundObject.idRaharaha;
+        let andrName = getAndraikitraNameById(foundObject.idRaharaha);
+        console.log("andrName");
+        console.log(andrName);
       return (
         < >
-          <label htmlFor="">{andr.andraikitra}</label>
-          <SelectC key={andr.id} handleSelectChange={handleSelectChange} name={name} andraikitra={andr.id}  ></SelectC>
+          <label htmlFor="">{andrName}</label>
+          <SelectC key={foundObject.idRaharaha} handleSelectChange={handleSelectChange} name={nameSelect} andraikitra={foundObject.idRaharaha}  ></SelectC>
         </>
       );
-    }
-    return null;
-  });
+    }else{
+      return null
 
+    }
+
+
+  })
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -53,6 +93,14 @@ function Form({ andraikitraToForm, getSubmittedData, dateArray }) {
     }
     getSubmittedData(andraikitraArray);
   }
+
+  function getAndraikitraNameById (id){
+   
+    const andrObj = andraikitraData.find(item =>  parseInt(item.id)  === parseInt(id));
+    return andrObj.andraikitra;
+
+  }
+
 
   return (
     <>
