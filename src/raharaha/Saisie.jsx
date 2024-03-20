@@ -12,23 +12,28 @@ function Saisie() {
 	const [andraikitraParDate, setAndraikitraParDate] = useState([]);
 	const [mpitondraRaharaha, setMpitondraRaharaha] = useState([]);
 	const [andraikitra, setAndraikitra] = useState([]);
-	const [arrayInputsData, setarrayInputsData] = useState([]);
+	const [inputsData, setInputsData] = useState([]);
 	const [selectedDate, setSelectedDate] = useState( formatDateFr(new Date()));
+	const [mambraData, setMambraData] = useState([]);
+	const [sampanaData, setSampanaData] = useState([]);
 
 	useEffect(() => {
 		fetchData({ type: 'data' }, setMpitondraRaharaha);
 		fetchData({ type: 'andraikitraParDate' }, setAndraikitraParDate);
 		fetchData({ type: 'andraikitra' }, setAndraikitra);
+		fetchData({ type: 'mambra' }, setMambraData);
+		fetchData({ type: 'sampana' }, setSampanaData);
 	}, []); // Runs when dependency1 or dependency2 changes
 
-//data pour un input 
-const inputData = {
-		 		  name : "",
-		 		  type :"",
-				  value : "", //pour select
-		 		  label :"", //text select
-				  label2:"" //label pour input
-				}
+	//data pour un input 
+	const inputData = {
+		name : "",
+		type :"",
+		defaultInputValue : "", //valeur affiché select
+		defaultValue : "", //value defalut option select
+		label :"", //text select
+		selectOptions:[]
+	}
 
 	const handleDateChange = (objectDate) => {
 
@@ -42,19 +47,23 @@ const inputData = {
 		let dateFR  = formatDateFr(objectDate)[0];
 		let andraikitraIdsByDayname = andraikitraParDate[dayName] ? andraikitraParDate[dayName] : [];
 
-		let inputsData = andraikitraIdsByDayname.map(andrId => {
+		const arrInputsData = andraikitraIdsByDayname.map(andrId => {
 
 			let andrObj = getAndraikitraById(andrId);
+			//mpitonodra raharha existant pou la date et andraikitra
 			let existingMRObj = getRaharahaByIdAndDate(existingData,andrId,dateEN);
-			let name = andrObj.id+"_"+dateFR;
+			let name = dateFR+"_"+andrObj.id;
 			let value = existingMRObj ? parseInt(existingMRObj.id)  : 0; //id de la personne
 			let type = "select";
 			let label = andrObj.andraikitra;
+			let selectOptions = getSelectOptions(andrId);
+			let defaultValue = existingMRObj ?{value:existingMRObj.id,label: existingMRObj.prenom}  : {value:0,label:"Select"};
 
-			return { ...inputData,name:name,value:value,type:type,label:label,label2:label  }
+			return { ...inputData,name:name,value:value,type:type,label:label,defaultValue:defaultValue,selectOptions  }
 
 		} )
-		setarrayInputsData(inputsData);
+
+		setInputsData(arrInputsData);
 
 	}
 
@@ -66,6 +75,22 @@ const inputData = {
 		return arrayOfObj.find(obj => parseInt(obj.idRaharaha) === parseInt(id) && obj.date === date ) 
 	}
 
+	function getSelectOptions(idAndraikitra){
+		//construire un nouveau objet avec mambra 
+		const mambraOptions = mambraData.map(m => ({
+					value: m.id,
+					label: m.prenom
+		}))
+		const sampanaOptions = sampanaData.map(m => ({
+					value: m.id,
+					label: m.name
+		}))
+		const andrFampaherezana = [13];
+				
+		const options = andrFampaherezana.includes(parseInt(idAndraikitra)) ? sampanaOptions : mambraOptions;
+		return options;
+	}
+
 	const toastSuccess = (message) => {
 		toast.success(message);
 	};
@@ -74,6 +99,30 @@ const inputData = {
 		toast.error(message);
 	};
 
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		const formData = new FormData(e.target);
+		// Iterate over the entries
+	
+		let andraikitraArray = [];
+		for (var pair of formData.entries()) {
+		let andraikitra = { date: "", andraikitraId: 0, membreId: 0 };
+	
+		let [date, andraikitraId] = pair[0].split('_');
+		let membreId = pair[1];
+	
+		andraikitra.date = formatDate(date);
+		andraikitra.andraikitraId = parseInt(andraikitraId);
+		andraikitra.membreId = parseInt(membreId);
+	
+		andraikitraArray.push(andraikitra);
+		}
+	
+		console.log("andraikitraArray");
+		console.log(andraikitraArray);
+	
+		// getSubmittedData(andraikitraArray);
+	}
 	const getSubmittedData = (data) => {
 		//submission de da
 		axios.post('http://localhost/backend_fiangonana_mobile/traitement.php', data, {
@@ -89,6 +138,8 @@ const inputData = {
 		});
 	}
 
+
+
 	return (
 		<>
 			<ToastContainer />
@@ -100,7 +151,7 @@ const inputData = {
 				<h5> {selectedDate[1] + "-" + selectedDate[0]} </h5>
 			</div>
 			<div className="card p-2">
-					<Form inputsData={inputData} ></Form>
+					<Form inputsData={inputsData} handleSubmit={handleSubmit}></Form>
 			</div>
 		</>
 	)
