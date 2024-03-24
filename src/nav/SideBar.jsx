@@ -25,6 +25,18 @@ function SideBar() {
                         </ul>
                     </li>
                     <li className="">
+                        <a href="#filazana" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">Fiazana</a>
+                        <ul className="collapse list-unstyled" id="filazana">
+                            <li>
+                                <Link to="/filazana">Accueil</Link>
+                            </li>
+                            <li>
+                                <Link to="/filazana/saisie">Saisie</Link>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li className="">
                         <a href="#donnee" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">Données</a>
                         <ul className="collapse list-unstyled" id="donnee">
                             <li>

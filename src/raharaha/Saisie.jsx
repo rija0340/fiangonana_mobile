@@ -1,6 +1,6 @@
 import DatepickerRestricted from "../utils/DatepickerRestricted";
 import { formatDateFr, formatDate } from "../utils/dateHelper";
-import Form from "./Form";
+import Form from "../utils/Form";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { fetchData } from "../utils/axiosRequest";
@@ -29,8 +29,7 @@ function Saisie() {
 	const inputData = {
 		name : "",
 		type :"",
-		defaultInputValue : "", //valeur affiché select
-		defaultValue : "", //value defalut option select
+		defaultValue : "", //value defalut option select (object)
 		label :"", //text select
 		selectOptions:[]
 	}
@@ -124,6 +123,9 @@ function Saisie() {
 		// getSubmittedData(andraikitraArray);
 	}
 	const getSubmittedData = (data) => {
+		const dataToSend ={
+			...data,dataType:"raharaha"
+		}
 		//submission de da
 		axios.post('http://localhost/backend_fiangonana_mobile/traitement.php', data, {
 			headers: { 'Content-Type': 'application/json' }
